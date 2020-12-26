@@ -3,12 +3,14 @@ MAINTAINER Nicolas Canfrere
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
+RUN apt-get update
 
 ARG deps="git gnupg apt-utils apt-transport-https build-essential openssh-client rsync sqlite3 zip unzip vim"
 
 RUN apt-get install -y --no-install-recommends $deps
 
 RUN apt-get install -y --no-install-recommends \
+  libmcrypt-dev \
 	libgmp-dev \
 	libfreetype6-dev \
 	libjpeg-dev \
@@ -46,7 +48,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 
 RUN docker-php-ext-configure imap --with-imap --with-kerberos --with-imap-ssl
 
-ARG modules="bcmath bz2 calendar dba enchant exif gd gettext gmp imap interbase intl ldap mysqli opcache pcntl  pdo_dblib pdo_firebird pdo_mysql pdo_pgsql pgsql pspell recode shmop soap sockets sysvmsg sysvsem sysvshm tidy wddx xmlrpc xsl zip"
+ARG modules="bcmath bz2 calendar dba enchant exif gd gettext gmp imap interbase intl ldap mcrypt mysqli opcache pcntl  pdo_dblib pdo_firebird pdo_mysql pdo_pgsql pgsql pspell recode shmop soap sockets sysvmsg sysvsem sysvshm tidy wddx xmlrpc xsl zip"
 
 RUN docker-php-ext-install $modules
 
@@ -58,7 +60,7 @@ RUN pecl install redis \
 	&& docker-php-ext-enable redis
 RUN pecl install amqp \
 	&& docker-php-ext-enable amqp
-RUN pecl install xdebug \
+RUN pecl install xdebug-2.9.8 \
 	&& docker-php-ext-enable xdebug
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
